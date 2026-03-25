@@ -301,6 +301,7 @@ def create_pdf_report(path, client_name, total_score, severity, report_text, ans
 
     story += [
         Paragraph("Beck Depression Inventory", title_s),
+        Spacer(1, 0.5*cm),
         Paragraph("Clinical Assessment Report", sub_s),
         Paragraph(f"CONFIDENTIAL  -  {date_str}", meta_s),
         HRFlowable(width="100%", thickness=1, color=BORDER),
