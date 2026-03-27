@@ -515,8 +515,35 @@ if page == "admin":
             st.rerun()
 
 else:
-    if "submitted" not in st.session_state:
-        st.session_state.submitted = False
+    if "submitted"      not in st.session_state: st.session_state.submitted = False
+    if "access_granted" not in st.session_state: st.session_state.access_granted = False
+
+    if not st.session_state.access_granted:
+        st.markdown("""<div class="assessment-header">
+            <p>Confidential Psychological Assessment</p>
+            <h1>Beck Depression Inventory</h1>
+        </div>""", unsafe_allow_html=True)
+        st.markdown("""<div style="max-width:360px;margin:0 auto;padding:2rem 0;text-align:center;">
+            <p style="color:#8B7355;font-size:.9rem;margin-bottom:1.5rem;line-height:1.8;">
+                This assessment is available to referred patients only.<br>
+                Please enter the access code provided by your clinician.
+            </p>
+        </div>""", unsafe_allow_html=True)
+        col_a, col_b, col_c = st.columns([1, 2, 1])
+        with col_b:
+            code = st.text_input("Access code", type="password",
+                                 placeholder="Enter access code",
+                                 label_visibility="collapsed")
+            if st.button("Enter", use_container_width=True):
+                valid_codes = [c.strip() for c in st.secrets.get("ACCESS_CODE", "").split(",")]
+                if code.strip() in valid_codes:
+                    st.session_state.access_granted = True
+                    st.rerun()
+                else:
+                    st.markdown("""<div class="warning-box">
+                        ⚠ Incorrect access code. Please check and try again.
+                    </div>""", unsafe_allow_html=True)
+        st.stop()
 
     if st.session_state.submitted:
         st.markdown("""
